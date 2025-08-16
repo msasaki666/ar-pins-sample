@@ -1,0 +1,12 @@
+{
+  "name": "ar-pins-sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "pnpx http-server . -o -p 3000 -a localhost"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
