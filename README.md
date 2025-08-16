@@ -21,12 +21,25 @@ pnpm dev        # もしくは: npm run dev
 モデルを差し替える場合は `index.html` 内の `<a-assets>` で `a-asset-item` の `src` を変更してください。ローカルファイルを追加する場合は `assets/` フォルダを作成して配置し、相対パスで参照します。
 
 ## プロジェクト構成
-- `index.html`: エントリーポイント（HTML/JS/CSS 最小限）
+- `public/index.html`: エントリーポイント（HTML/JS/CSS 最小限）
 - `package.json`: 開発サーバ用スクリプト（`pnpm dev`）
 - `AGENTS.md`: コントリビュートガイドライン
 
 ## デプロイ
-ビルド工程は不要です。任意の静的ホスティング（GitHub Pages / Netlify など）に `index.html` を配信してください。カメラ利用のため本番は HTTPS を必須とし、外部アセットも HTTPS で読み込んでください。
+ビルド工程は不要です。任意の静的ホスティング（GitHub Pages / Netlify など）に `public/` を配信してください。カメラ利用のため本番は HTTPS を必須とし、外部アセットも HTTPS で読み込んでください。
+
+### Cloudflare Workers
+Wrangler で静的アセットとして配信できます。
+```bash
+# 初回のみ
+pnpm dlx wrangler login
+
+# ローカルプレビュー
+pnpm run cf:dev
+
+# デプロイ（*.workers.dev に公開）
+pnpm run cf:deploy
+```
 
 ## トラブルシューティング
 - カメラが起動しない: ブラウザの権限を許可、HTTPS/localhost でアクセス。
