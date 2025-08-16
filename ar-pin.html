@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Minimal AR Demo</title>
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    #captureBtn {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      z-index: 1000;
+      padding: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <button id="captureBtn">📷</button>
+  <a-scene embedded arjs="trackingMethod: best; sourceType: webcam;" screenshot>
+    <a-assets>
+      <a-asset-item id="gltf-asset" src="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@2.0/Duck/glTF-Binary/Duck.glb"></a-asset-item>
+    </a-assets>
+
+    <a-marker preset="hiro">
+      <a-box id="fallback-box" position="0 0.5 0" rotation="0 45 0" color="#4CC3D9" animation="property: rotation; to: 0 360 0; loop: true; dur: 5000"></a-box>
+      <a-entity id="gltf-entity" visible="false" scale="0.05 0.05 0.05" gltf-model="#gltf-asset"></a-entity>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    (function() {
+      var asset = document.getElementById('gltf-asset');
+      var gltfEntity = document.getElementById('gltf-entity');
+      var boxEntity = document.getElementById('fallback-box');
+
+      asset.addEventListener('load', function () {
+        gltfEntity.setAttribute('visible', 'true');
+        boxEntity.setAttribute('visible', 'false');
+      });
+
+      asset.addEventListener('error', function (e) {
+        console.warn('GLTF model failed to load, using fallback box.', e);
+      });
+
+      document.getElementById('captureBtn').addEventListener('click', function () {
+        var sceneEl = document.querySelector('a-scene');
+        sceneEl.components.screenshot.capture('perspective');
+        var canvas = sceneEl.components.screenshot.getCanvas('perspective');
+        if (canvas) {
+          var link = document.createElement('a');
+          link.href = canvas.toDataURL('image/png');
+          link.download = 'ar-capture.png';
+          link.click();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
